@@ -1,5 +1,9 @@
 var Handler = function(app, dbWorker) {
     
+    app.get("/test", (req, res) => {
+        res.send("Hello, Azure!");
+    });
+
     app.get("/houses/get_information", async (req, res) => {
         var requestQuery = req.query;
         if (!requestQuery.hasOwnProperty("city") || !requestQuery.hasOwnProperty("street") || !requestQuery.hasOwnProperty("number")) {
