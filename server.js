@@ -4,7 +4,7 @@ const mssqlConfig = require("./config/MSSQLConfig")
 const MSSQLWorker = require("./application/classes/MSSQLWorker");
 
 const app = express();
-const port = 80;
+const port = process.env.PORT || 1337;
 
 (async function() {
     try {

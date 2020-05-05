@@ -80,30 +80,33 @@ var Handler = function(app, dbWorker) {
         res.send(result);
     });
 
+
+    // Добавить сообщения об успешности / неуспешности обновления
     app.get("/update_data", async (req, res) => {
-        await dbWorker.ClearDatabase();
-        var response = [];
-        var houses = FileWorker.ReadDataAboutHouses();
-        for (let i = 0; i < houses.length; i++) {
-            var currentHouse = houses[i];
-            console.log(currentHouse);
-            var informationAboutOrganizations = YandexApiWorker.GetInformation(currentHouse.city, currentHouse.street, currentHouse.number);
-            console.log(informationAboutOrganizations);
-            var house = informationAboutOrganizations.house;
-            var organizations = informationAboutOrganizations.organizations;
-            if (organizations.length == 0) {
-                await dbWorker.AddHouseToDatabase(informationAboutOrganizations.house);
-            }
-            else {
-                for (let j = 0; j < organizations.length; j++) {
-                    var currentOrganization = organizations[j];
-                    currentOrganization.house = house;
-                    await dbWorker.AddOrganizationToDatabase(currentOrganization);
+        try {
+            await dbWorker.ClearDatabase();
+            var houses = FileWorker.ReadDataAboutHouses();
+            for (let i = 0; i < houses.length; i++) {
+                var currentHouse = houses[i];
+                var informationAboutOrganizations = YandexApiWorker.GetInformation(currentHouse.city, currentHouse.street, currentHouse.number);
+                var house = informationAboutOrganizations.house;
+                var organizations = informationAboutOrganizations.organizations;
+                if (organizations.length == 0) {
+                    await dbWorker.AddHouseToDatabase(informationAboutOrganizations.house);
+                }
+                else {
+                    for (let j = 0; j < organizations.length; j++) {
+                        var currentOrganization = organizations[j];
+                        currentOrganization.house = house;
+                        await dbWorker.AddOrganizationToDatabase(currentOrganization);
+                    }
                 }
             }
-            response.push(informationAboutOrganizations);
+            res.send("Обновление информации проведено успешно"); 
         }
-        res.send(response); 
+        catch (error) {
+            res.send("Во время процесса обновления информации возникла ошибка")
+        }
     });
 };
 

@@ -403,7 +403,6 @@ var MSSQLWorker = function(database) {
         await AddRecordIfDoesntExistToHouseTable(currentHouse.city, currentHouse.street, currentHouse.number, currentHouse.latitude, currentHouse.longitude);
         await AddRecordIfDoesntExistToOrganizationTable(organization.name, organization.site, organization.schedule);
         await AddRecordIfDoesntExistToHouseOrgsTable(currentHouse.city, currentHouse.street, currentHouse.number, organization.name);
-        console.log("Come here!");
         console.log(organization);
         for (var i = 0; i < organization.orgCategories.length; i++) {
             var currentOrgCategory = organization.orgCategories[i];
